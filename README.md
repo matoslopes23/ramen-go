@@ -1,73 +1,190 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+````markdown
+# RamenGo API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Descrição
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A RamenGo é uma API para uma aplicação web que permite aos usuários montar um pedido de ramen, escolhendo os tipos de caldos e proteínas do prato. A API fornece endpoints para listar as opções disponíveis e permitir que o usuário faça um pedido.
 
-## Description
+## Tecnologias Utilizadas
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- [NestJS](https://nestjs.com/)
+- [TypeORM](https://typeorm.io/#/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Swagger](https://swagger.io/)
+- [Docker](https://www.docker.com/)
+- [Axios](https://github.com/axios/axios)
 
-## Installation
+## Arquitetura
 
-```bash
-$ yarn install
+- **src**
+  - **broths**
+    - **controller**
+      - `broths.controller.ts`
+    - **services**
+      - `broths.service.ts`
+    - **entities**
+      - `broth.entity.ts`
+    - `broths.module.ts`
+  - **orders**
+    - **controller**
+      - `orders.controller.ts`
+    - **services**
+      - `orders.service.ts`
+    - `orders.module.ts`
+    - **entities**
+      - `order.entity.ts`
+    - `dto`
+      - `create-order.dto.ts`
+  - **common**
+    - `dtos`
+      - `unauthorized-response.dto.ts`
+    - `middlewares`
+      - `api-key.middleware`
+  - **config**
+    - `typeorm.config.ts`
+  - `app.module.ts`
+  - `main.ts`
+
+## Configuração do Ambiente
+
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis de ambiente:
+
+```plaintext
+API_KEY=9762dfaf-f55a-4f81-91c2-902aebe6d53c
+REDVENTURES_API_KEY=ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf
+REDVENTURES_API_URL='https://api.tech.redventures.com.br/orders/generate-id'
+DB_LOGGING=true
+DB_HOST=localhost
+DB_PORT=5434
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_NAME=postgres
+
+```
+````
+
+## Configuração do Docker
+
+### docker-compose.yml
+
+```yaml
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: ramengo
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5434:5432'
+    volumes:
+      - ./.postgres-data:/var/lib/postgresql/data
+
+volumes:
+  .postgres-data:
 ```
 
-## Running the app
+## Endpoints
+
+### Broths
+
+- **GET** `/broths` - Lista todos os caldos disponíveis.
+
+### Proteins
+
+- **GET** `/proteins` - Lista todos os caldos disponíveis.
+
+### Orders
+
+- **POST** `/orders` - Cria um novo pedido.
+  - Body:
+    ```json
+    {
+      "description": "Salt and Chasu Ramen",
+      "image": "https://tech.redventures.com.br/icons/ramen/ramenChasu.png"
+    }
+    ```
+
+## Swagger
+
+A documentação do Swagger está disponível em `http://localhost:3000/doc` após iniciar a aplicação.
+
+## Executando a Aplicação
+
+### Levante o banco de dados
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+docker-compose up
 ```
 
-## Test
+### Localmente
 
-```bash
-# unit tests
-$ yarn run test
+1. Instale as dependências:
 
-# e2e tests
-$ yarn run test:e2e
+   ```bash
+   npm install or yarn install
+   ```
 
-# test coverage
-$ yarn run test:cov
-```
+2. Configure o banco de dados no `src/config/typeorm.config.ts`:
 
-## Support
+   ```typescript
+   import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+   import { config } from 'dotenv';
+   config();
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+   export const typeOrmConfig: TypeOrmModuleOptions = {
+     type: 'postgres',
+     host: process.env.DATABASE_HOST,
+     port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
+     username: process.env.DATABASE_USERNAME,
+     password: process.env.DATABASE_PASSWORD,
+     database: process.env.DATABASE_NAME,
+     entities: [__dirname + '/../**/*.entity.{js,ts}'],
+     synchronize: true,
+   };
+   ```
 
-## Stay in touch
+3. Execute a aplicação:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+   ```bash
+   npm run start:dev or yarn start:dev
+   ```
 
-## License
+### Populando o Banco de Dados com Seeds
 
-Nest is [MIT licensed](LICENSE).
+1. Crie um arquivo `seed.ts` no diretório `src`:
+
+   ```typescript
+   import { NestFactory } from '@nestjs/core';
+   import { AppModule } from './app.module';
+   import { getConnection } from 'typeorm';
+   import { Broth } from './broths/broth.entity';
+
+   async function bootstrap() {
+     const app = await NestFactory.createApplicationContext(AppModule);
+     const connection = getConnection();
+
+     const broths = [
+       { name: 'Shoyu', description: 'Soy sauce based', price: 5 },
+       { name: 'Miso', description: 'Soybean paste based', price: 6 },
+     ];
+
+     await connection.getRepository(Broth).save(broths);
+
+     await app.close();
+   }
+
+   bootstrap();
+   ```
+
+2. Execute o seed:
+
+   ```bash
+   ts-node src/seed.ts
+   ```
+
+## Hospedagem
+
+A API está hospedada na [Render](https://render.com/). Para implantar na Render, siga a [documentação oficial](https://render.com/docs/deploy-nestjs).
