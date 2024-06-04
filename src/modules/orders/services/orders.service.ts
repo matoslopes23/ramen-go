@@ -11,21 +11,22 @@ export class OrdersService {
       ...order,
     };
     this.orders.push(newOrder);
+
     return newOrder;
   }
 
   private async generateOrderId(): Promise<string> {
     try {
       const response = await axios.post(
-        'https://api.tech.redventures.com.br/orders/generate-id',
+        `${process.env.REDVENTURES_API_URL}`,
         {},
         {
           headers: {
-            'x-api-key': 'ZtVdh8XQ2U8pWI2gmZ7f796Vh8GllXoN7mr0djNf',
+            'x-api-key': `${process.env.REDVENTURES_API_KEY}`,
           },
         },
       );
-      return response.data.id;
+      return response.data.orderId;
     } catch (error) {
       throw new HttpException(
         'Failed to generate order ID',
