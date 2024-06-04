@@ -29,6 +29,24 @@ export class OrdersController {
     status: 401,
     type: UnauthorizedResponseDto,
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid request',
+    schema: {
+      example: {
+        error: 'both brothId and proteinId are required',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+    schema: {
+      example: {
+        error: 'Failed to generate order ID',
+      },
+    },
+  })
   create(@Body() createOrderDto: CreateOrderDto) {
     if (!createOrderDto.brothId || !createOrderDto.proteinId) {
       throw new HttpException(

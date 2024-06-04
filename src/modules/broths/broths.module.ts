@@ -8,5 +8,6 @@ import { Broth } from './entities/broths.entity';
   imports: [TypeOrmModule.forFeature([Broth])],
   controllers: [BrothsController],
   providers: [BrothsService],
+  exports: [BrothsService],
 })
 export class BrothsModule {}

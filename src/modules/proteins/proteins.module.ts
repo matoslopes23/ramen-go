@@ -8,5 +8,6 @@ import { Protein } from './entities/proteins.entity';
   imports: [TypeOrmModule.forFeature([Protein])],
   controllers: [ProteinsController],
   providers: [ProteinsService],
+  exports: [ProteinsService],
 })
 export class ProteinsModule {}
