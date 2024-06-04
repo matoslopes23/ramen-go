@@ -9,6 +9,7 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Ramen go Api Documentation')
+    .setDescription('API for RamenGo platform')
     .setVersion('1.0')
     .build();
 
