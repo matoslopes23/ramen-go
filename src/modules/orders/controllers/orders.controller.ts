@@ -11,7 +11,7 @@ import { ApiHeader, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UnauthorizedResponseDto } from 'src/common/dtos/unauthorized-response.dto';
 import { OrderResponseDto } from '../dtos/orders-response.dto';
 
-@Controller('orders')
+@Controller('order')
 @ApiTags('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
