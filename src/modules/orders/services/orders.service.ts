@@ -21,8 +21,8 @@ export class OrdersService {
     const { brothId, proteinId } = dto;
 
     const [protein, broth] = await Promise.all([
-      this.brotherService.findOne(brothId),
-      this.proteinService.findOne(proteinId),
+      this.brotherService.findOne(Number(brothId)),
+      this.proteinService.findOne(Number(proteinId)),
     ]);
 
     const orderId = await this.generateOrderId();

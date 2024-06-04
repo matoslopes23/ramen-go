@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateOrderDto {
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  brothId: number;
+  brothId: string;
 
-  @IsNumber()
+  @IsString()
   @ApiProperty()
-  proteinId: number;
+  proteinId: string;
 }
