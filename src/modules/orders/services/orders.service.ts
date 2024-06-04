@@ -1,18 +1,46 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
+import { Repository } from 'typeorm';
+import { Order } from '../entities/orders.entity';
+import { CreateOrderDto } from '../dtos/create-order.dto';
+import { BrothsService } from 'src/modules/broths/services/brothes.service';
+import { ProteinsService } from 'src/modules/proteins/services/proteins.service';
 
 @Injectable()
 export class OrdersService {
-  private orders = [];
+  constructor(
+    @InjectRepository(Order)
+    private readonly orderRepo: Repository<Order>,
 
-  async create(order) {
-    const newOrder = {
-      id: await this.generateOrderId(),
-      ...order,
+    private readonly brotherService: BrothsService,
+    private readonly proteinService: ProteinsService,
+  ) {}
+
+  async create(dto: CreateOrderDto) {
+    const { brothId, proteinId } = dto;
+
+    const [protein, broth] = await Promise.all([
+      this.brotherService.findOne(brothId),
+      this.proteinService.findOne(proteinId),
+    ]);
+
+    const orderId = await this.generateOrderId();
+
+    const order = this.orderRepo.create({
+      id: orderId,
+      description: `${broth.name} and ${protein.name} Ramen`,
+      protein,
+      broth,
+    });
+
+    await this.orderRepo.save(order);
+
+    return {
+      id: orderId,
+      description: order.description,
+      image: order.image,
     };
-    this.orders.push(newOrder);
-
-    return newOrder;
   }
 
   private async generateOrderId(): Promise<string> {
