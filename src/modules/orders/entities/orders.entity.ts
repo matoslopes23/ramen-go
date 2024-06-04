@@ -2,7 +2,7 @@ import { Broth } from 'src/modules/broths/entities/broths.entity';
 import { Protein } from 'src/modules/proteins/entities/proteins.entity';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'orders' })
 export class Order {
   @PrimaryColumn()
   id: string;
@@ -10,7 +10,9 @@ export class Order {
   @Column()
   description: string;
 
-  @Column()
+  @Column({
+    default: 'https://tech.redventures.com.br/icons/ramen/ramenChasu.png',
+  })
   image: string;
 
   @ManyToOne(() => Broth)
