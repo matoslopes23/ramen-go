@@ -2,6 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "resolveJsonModule": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -12,10 +13,18 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "typedocOptions": {
+    "entryPoints": [
+      "src/subject/",
+    ],
+    "exclude": [
+      "**/*.test.ts*",
+      "**/*.test.tsx*"
+    ],
+    "out": "docs"
   }
 }
