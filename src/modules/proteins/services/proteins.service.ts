@@ -1,4 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Protein } from '../entities/proteins.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProteinsService {
@@ -14,7 +17,26 @@ export class ProteinsService {
     },
   ];
 
-  findAll() {
-    return this.proteins;
+  constructor(
+    @InjectRepository(Protein)
+    private readonly proteinsRepo: Repository<Protein>,
+  ) {}
+
+  async findAll(): Promise<Protein[]> {
+    const proteinsResult = await this.proteinsRepo.find();
+
+    if (proteinsResult.length == 0) return this.proteins as any[];
+
+    return proteinsResult;
+  }
+
+  async findOne(id: number): Promise<Protein> {
+    const protein = await this.proteinsRepo.findOne({ where: { id } });
+
+    if (!protein) {
+      throw new BadRequestException('Protein not found');
+    }
+
+    return protein;
   }
 }
